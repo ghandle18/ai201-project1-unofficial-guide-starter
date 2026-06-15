@@ -1,10 +1,11 @@
 """
-query.py — Retrieval and grounded generation with confidence tiering.
+Milestone 4 - Retrieval, Grounded Generation, and Confidence Tiering
+query.py - Retrieval and grounded generation with confidence tiering.
 
 Confidence tiers based on cosine distance of top retrieved chunk:
-  < 0.30  → High confidence   (cite directly)
-  0.30–0.55 → Medium confidence (cite with verify-with-TA note)
-  > 0.55  → Low confidence    (decline, redirect to contribution form)
+  < 0.30  -> High confidence   (cite directly)
+  0.30-0.55 -> Medium confidence (cite with verify-with-TA note)
+  > 0.55  -> Low confidence    (decline, redirect to contribution form)
 """
 
 import os
@@ -18,7 +19,7 @@ load_dotenv()
 COLLECTION_NAME = "cs301_unofficial_guide"
 CHROMA_PATH = "./chroma_db"
 TOP_K = 5
-CONTRIBUTION_FORM = "https://forms.google.com/your-form-link-here"
+CONTRIBUTION_FORM = "https://forms.gle/Yq3N1y3Bjxub3VNv7"
 
 # Distance thresholds for confidence tiering
 HIGH_CONFIDENCE_THRESHOLD   = 0.30
