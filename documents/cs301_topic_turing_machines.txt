@@ -1,0 +1,117 @@
+SOURCE: CS 301 Languages & Automata — Homework 4: Pumping Lemma for CFLs & Turing Machines (Study Guide with Solutions)
+AUTHORITY: verified-TA
+TYPE: problem-walkthrough
+
+---
+
+TOPIC: Pumping Lemma for Context-Free Languages (CFLs)
+
+Q: What is the pumping lemma for context-free languages?
+A: If L is a context-free language, then there exists a pumping length p such that for every string s ∈ L with |s| ≥ p, s can be divided into five pieces: u, v, x, y, z where:
+1. |vy| > 0 (at least one of v or y is non-empty)
+2. |vxy| ≤ p (the "middle" portion is not too long)
+3. uv^i xy^i z ∈ L for all i ≥ 0
+
+The key difference from the regular pumping lemma: you pump TWO pieces (v and y) simultaneously, not just one.
+
+---
+
+Q: What is the structure of a CFL pumping lemma proof?
+A: Same logical structure as the regular case, but you split into cases based on where v and y fall in the string:
+1. Assume L is CFL with pumping length p
+2. Choose s ∈ L with |s| ≥ p (adversarial string — make it hard to pump)
+3. Consider ALL possible divisions with |vy| > 0 and |vxy| ≤ p
+4. For each case, show pumping fails (condition 3 violated)
+5. Conclude contradiction → L is not context-free
+
+The cases typically are:
+- Case 1: v and y contain only ONE type of symbol each
+- Case 2: v or y contains MORE than one type of symbol (pumping creates out-of-order strings)
+
+---
+
+Q: How do I prove L = {a^n b^n c^n | n ≥ 0} is not context-free?
+A: Choose s = a^p b^p c^p. By |vxy| ≤ p, the substring vxy can span at most two adjacent symbol types.
+
+Case 1: v and y contain only one type of symbol.
+  If they contain only a's or only c's: pump up (i=2) → unequal counts between the three symbols. String ∉ L.
+  If they contain only b's: pump up → more b's than a's or c's. String ∉ L.
+
+Case 2: v or y contains more than one type of symbol.
+  Pump up → symbols appear out of order (e.g., "aba..." pattern). String ∉ L.
+
+Since all divisions fail, L is not context-free. □
+
+---
+
+Q: How do I prove D = {0^n 1^m 2^n 3^m | n,m ≥ 0} is not context-free?
+A: Choose s = 0^p 1^p 2^p 3^p. By |vxy| ≤ p, the substring vxy lies within at most two adjacent blocks.
+
+Case 1: v and y contain only one type of symbol (only 0's, 1's, 2's, or 3's).
+  Pumping up cannot simultaneously increase both the count of 0's and 2's (or 1's and 3's). One count increases without the other matching. String ∉ D.
+
+Case 2: v or y contains more than one type of symbol (spans a boundary like 0's and 1's).
+  Pumping up creates out-of-order symbols. String ∉ D.
+
+Therefore D is not context-free. □
+
+---
+
+TOPIC: Turing Machine Implementation-Level Descriptions
+
+Q: What is an implementation-level description of a Turing Machine?
+A: It's a step-by-step description of how the TM manipulates its tape, in English, at the level of individual head movements and symbol replacements. More detailed than a "high-level description" (which just says what it computes) but less detailed than a state diagram.
+
+Format: M = "On input w, [numbered steps describing tape operations]"
+
+---
+
+Q: How do I write a TM that decides A = {w ∈ {0,1}* | w contains more 0's than 1's}?
+A: M = "On input w:
+1. Move right until finding an unmarked 0 and mark it. If no unmarked 0 is found, reject.
+2. Move left to the beginning of the tape.
+3. Move right until finding an unmarked 1 and mark it. If no unmarked 1 is found, accept.
+4. Move left to the beginning of the tape and go to step 1."
+
+This pairs each 0 with a 1. If we run out of 1's before 0's, there are more 0's → accept. If we run out of 0's before 1's (or simultaneously), → reject.
+
+---
+
+Q: How do I write a TM that decides B = {a^i b^j | j < 3i}?
+A: M = "On input w:
+1. Scan left to right. If not of form a*b*, reject. Otherwise go to start.
+2. Find an unmarked a, replace with x. If none, reject.
+3. Find a first b, replace with y. If no b, accept.
+4. Find a second b, replace with y. If no b, accept.
+5. Find a third b, replace with y. If no b, accept.
+6. Go to start and repeat from step 2."
+
+Each a is paired with up to 3 b's. If we exhaust b's before pairing all a's → j < 3i → accept. If we exhaust a's before b's → j ≥ 3i → reject.
+
+---
+
+Q: How do I write a TM that decides C = {0^i 1^j 2^k | j = i + k}?
+A: M = "On input w:
+1. Scan. If not 0*1*2*, reject. Otherwise go to start.
+2. Find an unmarked 0, replace with x. If none, go to step 5.
+3. Find an unmarked 1, replace with y. If none, reject.
+4. Go to start, go to step 2.
+5. Find an unmarked 1, replace with x. If none, go to step 8.
+6. Find an unmarked 2, replace with y. If none, reject.
+7. Go to start, go to step 5.
+8. Scan for unmarked 2. If found, reject. Otherwise, accept."
+
+Each 0 consumes a 1 (j decreases for each i), then each 2 consumes a 1 (j decreases for each k). Accepting when j = i + k.
+
+---
+
+Q: How do I write a TM that decides D = {a^n b^m | n,m > 0 and n is divisible by m}?
+A: M = "On input w:
+1. Scan. If not a+b+, reject. Otherwise go to the end.
+2. Find an unmarked b and replace with x. If none, go to step 5.
+3. Find an unmarked a and replace with y. If none, reject.
+4. Go to end, go to step 2.
+5. Find an unmarked a. If none, accept. Otherwise, restore all x's to b's (replace x→b from right to left) and go to end.
+6. Go to end, go to step 2."
+
+This repeatedly subtracts m from n. If n/m is exact, all a's are consumed → accept.

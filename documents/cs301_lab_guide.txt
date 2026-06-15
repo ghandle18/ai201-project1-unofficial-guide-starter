@@ -1,0 +1,117 @@
+SOURCE: CS 301 Languages & Automata — Homework 6: Class P & Class NP (Study Guide with Solutions)
+AUTHORITY: verified-TA
+TYPE: problem-walkthrough
+
+---
+
+TOPIC: Class P — Polynomial Time Decidability
+
+Q: What does it mean for a language to be in class P?
+A: A language L is in P if there exists a deterministic Turing machine that decides L and runs in O(n^k) time for some constant k, where n is the input size. Informally: L can be "solved efficiently" (in polynomial time) on a standard computer.
+
+Key facts:
+- P languages are also decidable (every P language has a TM that always halts polynomially fast)
+- P ⊆ NP (everything solvable in polynomial time can also be verified in polynomial time)
+- Whether P = NP is the most famous open problem in computer science
+
+---
+
+Q: How do I prove a language is in P?
+A: Construct a deterministic TM M that decides L and analyze its runtime:
+1. Describe M's algorithm step by step
+2. Count how many times each step runs (in terms of input size n = |input|)
+3. Show the total runtime is O(n^k) for some k
+
+Template: "Construct a deterministic TM M as follows. M = 'On input <...>: [steps]'. Step i runs in O(n^j) time because [reason]. Total: O(n^k). Therefore M is polynomial and L ∈ P."
+
+---
+
+Q: How do I prove CLAW ∈ P? (CLAW = {<G> | G has an independent set of 3 vertices where no two are adjacent, centered at some vertex})
+A: Algorithm: For each vertex v, check all triples of its neighbors. If any triple has no edges between them, accept.
+
+M = "On input <G> where G = (V, E):
+1. For each vertex v ∈ V:
+   - Let N be all neighbors of v.
+   - For each triple (x, y, z) of vertices in N:
+     - If (x,y) ∉ E AND (x,z) ∉ E AND (y,z) ∉ E, accept.
+2. Reject."
+
+Runtime: Step 1 iterates |V| vertices × |V|^3 triples = O(|V|^4). Step 2 is O(1). Total: O(n^4) → polynomial. Therefore CLAW ∈ P. □
+
+---
+
+Q: How do I prove CYCLE ∈ P? (CYCLE = {<G, v> | G has a cycle reachable from v})
+A: Use reachability (BFS/DFS from v). Accept if we can reach v again via a different path.
+
+M = "On input <G, v>:
+1. Mark vertex v.
+2. Repeat until no new vertices are marked:
+   - Scan all edges of G.
+   - If there is an edge from a marked vertex u to v (and we've left v), accept.
+   - If there is an edge from a marked vertex u to an unmarked vertex w ≠ v, mark w.
+3. Reject."
+
+Runtime: Step 1 is O(1). Step 2 repeats at most |V| times; each iteration scans at most |V|^2 edges. Total: O(|V|^3) = O(n^3) → polynomial. Therefore CYCLE ∈ P. □
+
+---
+
+TOPIC: Class NP — Nondeterministic Polynomial Time
+
+Q: What does it mean for a language to be in class NP?
+A: A language L is in NP if either:
+(A) A nondeterministic TM can decide L in polynomial time, OR equivalently:
+(B) A deterministic TM can verify a certificate/witness for membership in polynomial time.
+
+Both definitions are equivalent. For the verifier approach: given an instance x and a certificate c, the verifier checks if c proves x ∈ L in polynomial time.
+
+---
+
+Q: What is an NP-hard language?
+A: A language L is NP-hard if every language in NP is polynomial-time reducible to L. L is NP-complete if L ∈ NP AND L is NP-hard.
+
+Intuitively: NP-hard languages are "at least as hard as everything in NP." Solving an NP-hard language in polynomial time would imply P = NP.
+
+---
+
+Q: How do I prove STABLE-SET ∈ NP?
+A: (STABLE-SET = {<G, k> | G has an independent set of size k — k vertices with no edges between them})
+
+Certificate: the set S of k vertices.
+
+M = "On input <G, k>:
+1. Nondeterministically select a subset S of k vertices of G.
+2. For each vertex v ∈ S: if v is adjacent to any other vertex in S, reject.
+3. Accept."
+
+Runtime: Step 1 is O(n). Step 2 runs |S| ≤ |V| iterations, each checking |V| neighbors. Total: O(|V|^2) = O(n^2) → polynomial. Therefore STABLE-SET ∈ NP. □
+
+---
+
+Q: How do I prove ISOMORPHIC ∈ NP?
+A: (ISOMORPHIC = {<G, H> | graphs G and H are isomorphic — same structure with vertices relabeled})
+
+Certificate: a bijection Φ mapping vertices of G to vertices of H.
+
+M = "On input <G, H> where G = (V1, E1) and H = (V2, E2):
+1. Nondeterministically select a mapping Φ: V1 → V2.
+2. If |V1| ≠ |V2|, reject.
+3. For each pair (u, v) ∈ V1 × V1:
+   - If (u,v) ∈ E1 and (Φ(u), Φ(v)) ∉ E2, reject.
+   - If (Φ(u), Φ(v)) ∈ E2 and (u,v) ∉ E1, reject.
+4. Accept."
+
+Runtime: Steps 1–2 are O(n). Step 3 runs |V|^2 iterations. Total: O(n^2) → polynomial. Therefore ISOMORPHIC ∈ NP. □
+
+---
+
+Q: What is the key terminology for complexity classes?
+A: From the Final Exam Review (Jeopardy):
+- Class P: languages decidable in polynomial time on a deterministic TM
+- Class NP: languages decidable in polynomial time on a nondeterministic TM (equivalently, verifiable in poly time on a deterministic TM)
+- NP-hard: every NP language reduces to it in polynomial time
+- NP-complete: in NP AND NP-hard
+- Reduction: a function that maps instances of one problem to instances of another, preserving membership
+- Parse tree: graphical representation of a string derivation from a grammar
+- Language: a finite or infinite set of strings over an alphabet
+- Regular languages: the class of languages recognized by DFAs
+- Recognizable languages: the class of languages recognized by Turing machines

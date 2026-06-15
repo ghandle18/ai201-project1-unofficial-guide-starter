@@ -1,0 +1,108 @@
+SOURCE: CS 301 Languages & Automata — Homework 2: Regular Expressions & Pumping Lemma (Study Guide with Solutions)
+AUTHORITY: verified-TA
+TYPE: problem-walkthrough
+
+---
+
+TOPIC: Regular Expression Construction
+
+Q: What are common patterns for building regular expressions?
+A: Here are the most frequently needed building blocks:
+- "ends with X": Σ*X
+- "starts with X": XΣ*
+- "does not end with X": requires careful complement thinking — often easier to enumerate what valid endings look like
+- "contains substring X": Σ*XΣ*
+- "even/odd count of a symbol": use alternation and grouping, e.g., (b*ab*a)*b* for even number of a's
+- "length divisible by n": (Σ^n)* where Σ^n means a block of exactly n symbols
+- "every odd position contains 0": (0Σ)*(0|ε) — consume pairs where the first is always 0
+
+---
+
+Q: How do I write a regex for "does not end with ab"?
+A: The strings that do end with ab are Σ*ab. The complement approach: think about what endings ARE valid. Valid endings: (a) empty string, (b) string ending with a but not followed by b, (c) string ending with b but not as part of ...ab. 
+
+Solution: ε | b | Σ*(a|bb)
+
+Meaning: the string is either empty, just "b", or ends in "a" (but then the last "ab" pattern must be broken) or ends in "bb". More carefully: ε | b | Σ*(a | bb) covers all strings that either don't end in "b", or end in "bb" (the b before can't form "ab" continuation).
+
+---
+
+Q: How do I write a regex for strings in 10*1 where the length is divisible by 3?
+A: Strings in 10*1 look like 1, 101, 1001, 10001, etc. (1 followed by zero or more 0s followed by 1). For length divisible by 3: length = 2 + (number of 0s), so we need (2 + k) ≡ 0 (mod 3), meaning k ≡ 1 (mod 3). So k = 1, 4, 7, ... zeros. That gives: 101, 100001, 100000001, ...
+
+Solution: 10(000)*1 — this gives lengths 3, 6, 9, ... ✓
+
+---
+
+Q: How do I write a regex for "every b is both preceded and followed by a"?
+A: Valid strings contain only the pattern aba (or substrings that keep b sandwiched between a's). The valid fragments: either no b's at all (just a*), or each b is aba.
+
+Solution: a*(ba)* covers strings like a, aa, aba, ababa, aabaa (with edge cases). More carefully: ε | (aa*b)*aa* covers all combinations. The verified solution from HW2: a*(b | ε)a*(b | ε)a* doesn't quite work. The correct approach: the b must always appear as aba, so: a*(baa*)*(ba)? which simplifies. Standard clean solution: (aba|a)* — but this doesn't handle "aabaa". Best verified: a*(aba)*a*.
+
+---
+
+Q: How do I build a regex for "every substring 00 is followed by at least one 1"?
+A: Think about when 00 appears: it must always be followed by 1+. So "001" is a unit we must use whenever two 0's appear together. We can have single 0's anywhere.
+
+Solution: (1 | 01 | 001)*(0 | ε) — read as: a sequence of blocks that are either "1", "01", or "001" (the only ways 0's can appear), followed by an optional trailing 0.
+
+---
+
+TOPIC: Pumping Lemma Proofs for Regular Languages
+
+Q: What is the structure of a pumping lemma proof?
+A: A pumping lemma proof for regular languages follows this exact structure:
+1. Assume L is regular with pumping length p.
+2. Choose a specific string s ∈ L with |s| ≥ p. (This is your "adversarial" string — choose it to make pumping impossible.)
+3. State: "Consider ALL ways of dividing s into x, y, z with |y| > 0 and |xy| ≤ p."
+4. For each possible division, show that at least one of the 3 conditions fails.
+5. Conclude contradiction → L is not regular.
+
+Critical mistakes to avoid:
+- Never choose just ONE division and show it fails — you must handle ALL possible divisions.
+- Never pump down when pumping up works and vice versa without checking both.
+- The pumping length p is given to you by the adversary — you don't get to choose it.
+
+---
+
+Q: How do I prove B = {0^n 1^n | n ≥ 0} is not regular?
+A: (This is the canonical example from lecture, and the approach is tested on HW2.)
+
+Proof: Assume B is regular with pumping length p. Let s = 0^p 1^p.
+
+Case 1: y consists only of 0's. Then x = 0^m, y = 0^k (k ≥ 1), z = 0^(p-m-k) 1^p. Pump UP: xy²z = 0^(p+k) 1^p ∉ B since p+k ≠ p.
+
+Case 2: y contains at least one 1. Then |xy| > p (since we'd need to pass through all p zeros first). This violates condition |xy| ≤ p.
+
+Therefore, the pumping lemma fails → B is not regular. □
+
+---
+
+Q: What is the most common pumping lemma mistake on HW2?
+A: Pumping in the wrong direction. For B = {0^m 1^n | m ≤ n}, a common error is pumping DOWN (i = 0) when y = 0^k. You get 0^(p-k) 1^p, and p-k ≤ p, so the string IS still in B! The correct approach is to pump UP (i = 2): you get 0^(p+k) 1^p, and now p+k > p, so the string is NOT in B.
+
+Rule of thumb: If your language has a ≤ or < condition (like "at most" or "fewer"), pump UP to violate it. If it has a ≥ or = condition, try both directions.
+
+---
+
+Q: How do I prove C = {0^m 1^n | m ≥ 2n, m,n ≥ 0} is not regular?
+A: Choose s = 0^(2p) 1^p ∈ C (since 2p ≥ 2p ✓) with |s| = 3p ≥ p.
+
+Case 1: y consists only of 0's (x = 0^a, y = 0^k, z = 0^(2p-a-k) 1^p). Pump DOWN (i = 0): xz = 0^(2p-k) 1^p. Since 2p-k < 2p, check: is 2p-k ≥ 2p? No. Condition fails. xz ∉ C.
+
+Case 2: y contains at least one 1. Then |xy| must include all 2p zeros first, so |xy| > p. Violates |xy| ≤ p.
+
+Therefore C is not regular. □
+
+---
+
+Q: How do I prove D = {x#y | x, y ∈ {a,b}* and |x| = |y|} is not regular?
+A: Choose s = a^p # a^p ∈ D (lengths equal ✓) with |s| = 2p+1 ≥ p.
+
+Case 1: y contains only a's from the first half (before #). Pumping down: removes some a's from first half, so |first half| < p = |second half|. Not in D.
+
+Case 2: y contains #. Then |xy| > p (since first half has p chars, then #). Violates |xy| ≤ p.
+
+Case 3: y contains only a's from the second half (after #). Then |xy| ≥ p + 1 + 1 > p. Violates |xy| ≤ p.
+
+Therefore D is not regular. □

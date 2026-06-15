@@ -1,0 +1,85 @@
+SOURCE: CS 301 Languages & Automata — Decidability Language Reference Sheet
+AUTHORITY: official
+TYPE: reference
+
+---
+
+DECIDABLE LANGUAGES (TM always halts, always correct)
+
+A_DFA = {<D, w> | D is a DFA that accepts string w}
+  → Simulate D on w step by step.
+
+A_NFA = {<N, w> | N is an NFA that accepts string w}
+  → Convert N to DFA, then simulate.
+
+A_REGEX = {<R, w> | R is a regular expression that generates string w}
+  → Convert R to NFA, then to DFA, then simulate.
+
+A_CFG = {<G, w> | G is a context-free grammar that generates string w}
+  → Convert G to CNF, try all derivations of length 2|w|−1.
+
+A_PDA = {<P, w> | P is a PDA that accepts string w}
+  → Convert P to CFG, then decide A_CFG.
+
+E_DFA = {<D> | D is a DFA and L(D) = ∅}
+  → Mark all states reachable from start. If no accept state is marked, accept.
+
+E_NFA = {<N> | N is an NFA and L(N) = ∅}
+  → Convert to DFA, then decide E_DFA.
+
+E_REGEX = {<R> | R is a regular expression and L(R) = ∅}
+  → Convert to NFA, then decide E_NFA.
+
+E_CFG = {<G> | G is a CFG and L(G) = ∅}
+  → Mark all variables that can derive a terminal string. If start variable is not marked, accept.
+
+E_PDA = {<P> | P is a PDA and L(P) = ∅}
+  → Convert to CFG, then decide E_CFG.
+
+EQ_DFA = {<D1, D2> | D1 and D2 are DFAs and L(D1) = L(D2)}
+  → Build DFA for symmetric difference (L(D1) − L(D2)) ∪ (L(D2) − L(D1)), then decide E_DFA.
+
+EQ_NFA = {<N1, N2> | N1 and N2 are NFAs and L(N1) = L(N2)}
+  → Convert both to DFAs, then decide EQ_DFA.
+
+EQ_REGEX = {<R1, R2> | R1 and R2 are regular expressions and L(R1) = L(R2)}
+  → Convert both to DFAs, then decide EQ_DFA.
+
+---
+
+UNDECIDABLE LANGUAGES (no TM can decide these)
+
+A_TM = {<M, w> | M is a TM that accepts string w}
+  → UNDECIDABLE. Proved by diagonalization (Cantor-style). This is the canonical undecidable language used as a starting point for other reductions.
+  → A_TM IS recognizable: just run M on w and report if it accepts (but may loop if M loops).
+
+E_TM = {<M> | M is a TM and L(M) = ∅}
+  → UNDECIDABLE. Proved by reduction from A_TM.
+
+EQ_TM = {<M1, M2> | M1 and M2 are TMs and L(M1) = L(M2)}
+  → UNDECIDABLE. Neither recognizable nor co-recognizable.
+
+EQ_CFG = {<G1, G2> | G1 and G2 are CFGs and L(G1) = L(G2)}
+  → UNDECIDABLE.
+
+EQ_PDA = {<P1, P2> | P1 and P2 are PDAs and L(P1) = L(P2)}
+  → UNDECIDABLE (same as EQ_CFG since PDAs ≡ CFGs).
+
+---
+
+QUICK DECIDABILITY TEST
+
+Q: Is the acceptance problem for X decidable?
+- DFA/NFA/REGEX: YES (simulate / convert to DFA)
+- CFG/PDA: YES (convert to CNF, bounded derivation)
+- TM: NO (A_TM is undecidable)
+
+Q: Is the emptiness problem for X decidable?
+- DFA/NFA/REGEX: YES (reachability)
+- CFG/PDA: YES (mark variables that derive terminals)
+- TM: NO (E_TM is undecidable)
+
+Q: Is the equivalence problem for X decidable?
+- DFA/NFA/REGEX: YES (symmetric difference + emptiness)
+- CFG/PDA: NO (undecidable)
+- TM: NO (undecidable)

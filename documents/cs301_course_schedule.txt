@@ -1,0 +1,75 @@
+SOURCE: CS 301 Languages & Automata — Course Schedule & Logistics FAQ
+AUTHORITY: official
+TYPE: Q&A
+
+---
+
+Q: What topics are covered in CS 301 and in what order?
+A: CS 301 covers the following topics across 15 weeks:
+- Week 1: Sets, Strings, and Languages (Chapter 0)
+- Week 2: Deterministic Finite Automata (DFAs) (Chapter 1.1)
+- Week 3: Nondeterministic Finite Automata (NFAs) (Chapter 1.2)
+- Week 4: Regular Expressions (Chapter 1.3)
+- Week 5: Pumping Lemma for Regular Languages (Chapter 1.4)
+- Week 6: Grammars
+- Week 7: Context-Free Grammars (CFGs) (Chapter 2.1)
+- Week 8: Pushdown Automata (PDAs) (Chapter 2.2)
+- Week 9: Pumping Lemma for Context-Free Languages (Chapter 2.3)
+- Week 10: Turing Machines (Chapter 3)
+- Week 11: Decidability (Chapter 4.1)
+- Week 12: Reducibility (Chapters 4.2, 5.1)
+- Week 13: Time Complexity (Chapter 7.1)
+- Week 14: Class P and Class NP (Chapters 7.2, 7.3)
+- Week 15: NP-Completeness (Chapters 7.4, 7.5)
+
+---
+
+Q: When are the two midterm exams scheduled?
+A: Exam 1 is on Wednesday of Week 7 (February 25) at 6:00pm–7:30pm. Exam 2 is on Wednesday of Week 13 (April 15) at 6:00pm–7:30pm. Both are in-person. Locations are announced closer to the exam date.
+
+---
+
+Q: When is the final exam?
+A: The final exam is in Week 16 (TBD date and time). It is in-person.
+
+---
+
+Q: What is the homework schedule?
+A: There are 6 homework assignments across the semester:
+- HW1 (DFAs & NFAs): due Sunday of Week 4 (Feb 08)
+- HW2 (Regular Expressions & Pumping Lemma): due Sunday of Week 6 (Feb 22)
+- HW3 (CFGs & PDAs): due Sunday of Week 9 (Mar 15)
+- HW4 (Pumping Lemma & TMs): due Sunday of Week 11 (Apr 05)
+- HW5 (Decidability, Undecidability & Reducibility): due Sunday of Week 13 (Apr 19)
+- HW6 (Complexity, Class P & Class NP): due Sunday of Week 15 (May 03)
+All due at 11:59PM Central Time on Sunday.
+
+---
+
+Q: When are quizzes due?
+A: Quizzes are due Fridays at 11:59PM Central Time. There is no quiz in Week 1. The first quiz (Q1, Preliminaries) is due Friday of Week 2 (Jan 23). Quizzes are taken online on Blackboard. There are 13 total quizzes but only the top 10 count; the three lowest are dropped.
+
+---
+
+Q: When are lab assignments?
+A: Lab assignments are completed in-person during Tuesday discussion sessions. The first lab is in Week 2 (Tuesday, Jan 20). There are 13 total labs but only the top 10 count; three lowest are dropped.
+
+---
+
+Q: Is there a Spring Break?
+A: Yes. Spring Break is the week of March 23–27 (Week - in the schedule). No classes or assignments that week.
+
+---
+
+Q: What does Exam 1 cover?
+A: Exam 1 covers material from Weeks 1–6: Sets/Strings/Languages, DFAs, NFAs, Regular Expressions, Pumping Lemma for Regular Languages, and Grammars. Quiz 5 is labeled "Exam 1 Review" and is due the Friday before the exam.
+
+---
+
+Q: What does Exam 2 cover?
+A: Exam 2 covers material from Weeks 7–12: CFGs, Chomsky Normal Form, PDAs, Pumping Lemma for CFLs, Turing Machines, Decidability, and Reducibility. Quiz 11 is labeled "Exam 2 Review."
+
+---
+
+Q: What does the Final Exam cover?
+A: The Final Exam is cumulative and covers all topics. A final exam review session is held on Friday of Week 15 (May 01), and Quiz 13 covers Complexity, Class P, and Class NP. A practice final exam and Jeopardy review are available as study materials.

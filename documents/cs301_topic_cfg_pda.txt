@@ -1,0 +1,140 @@
+SOURCE: CS 301 Languages & Automata — Homework 3: CFGs & PDAs (Study Guide with Solutions)
+AUTHORITY: verified-TA
+TYPE: problem-walkthrough
+
+---
+
+TOPIC: Context-Free Grammar (CFG) Construction
+
+Q: What is the general strategy for building a CFG?
+A: Ask yourself: "What is the recursive/nested structure of this language?" CFGs are powerful precisely because they handle nesting and counting relationships between different parts of a string.
+
+Common patterns:
+- Matching counts (a^i b^i): S → aSb | ε
+- Two independent conditions joined: S → AB where A and B handle each part separately
+- Concatenation with different counts: S → AB where A → aAb | ε (handles i pairs) and B → bBc | bc (handles j>0 pairs)
+- Palindromes: S → aSa | bSb | a | b | ε
+
+---
+
+Q: How do I build a CFG for A = {a^i b^(i+j) c^j | i ≥ 0, j > 0}?
+A: Rewrite as: a^i b^i b^j c^j. The string decomposes into two parts that can be handled independently: the "a...b matching" part and the "b...c matching" part.
+
+Solution:
+  S → AB
+  A → aAb | ε        (generates a^i b^i for any i ≥ 0)
+  B → bBc | bc       (generates b^j c^j for any j > 0)
+
+S is the start symbol.
+
+Verify: for i=1, j=2 → abbbcc. A generates "ab", B generates "bbcc", concat = "abbbcc" ✓
+
+---
+
+Q: How do I build a CFG for B = {0^n 1^m # 2^n | n > 0, m ≥ 0}?
+A: The 0's and 2's must match (n of each), with any number of 1's in the middle and exactly one #.
+
+Solution:
+  S → 0S2 | 0T2     (wrap matching 0's and 2's; recurse or move to middle)
+  T → 1T | #         (generate any number of 1's followed by #)
+
+S is the start symbol.
+
+Verify: n=2, m=1, string = 00 1 # 22.
+  S → 0S2 → 00T22 → 001T22 → 001#22 ✓
+
+---
+
+Q: How do I build a CFG for C = {x#y | x, y ∈ {a,b}* and x contains y^R as a substring}?
+A: x contains y^R as a substring means x = α (y^R) β for some strings α, β. So the full string is α (y^R) β # y.
+
+Insight: β and y need to be generated jointly (y in the right part and β matching something), but α and β are free. The tricky part is y^R appearing inside x.
+
+Solution:
+  S → XY
+  X → aX | bX | ε              (generates any prefix α in x)
+  Y → aYa | bYb | X#           (mirrors a^R pattern, then X handles free suffix β and # separator)
+
+S is the start symbol.
+
+The Y variable generates the "palindrome-like" mirrored section: for each character added around Y on the left, the same character is added to the right after #. X then handles the remainder.
+
+---
+
+TOPIC: Chomsky Normal Form (CNF) Conversion
+
+Q: What are the 5 steps to convert a CFG to CNF?
+A: The procedure in order is: START → BIN → DEL → UNIT → TERM
+
+1. START: Add new start variable S0 → S (so start variable doesn't appear on right side)
+2. BIN: Replace rules with 3+ symbols on the right: A → BCD becomes A → BX, X → CD
+3. DEL: Remove ε-rules (except possibly S0 → ε). For each nullable variable, add rules for all combinations with/without it
+4. UNIT: Remove unit rules (A → B where B is a variable). Replace with all rules B generates
+5. TERM: Replace terminals mixed with variables: A → aB becomes A → XB, X → a
+
+---
+
+Q: What are the CNF rules that are NOT allowed?
+A: CNF only allows:
+- A → BC (exactly two variables)
+- A → a (exactly one terminal)
+- S0 → ε (only if ε is in the original language)
+
+Violations (NOT allowed in CNF):
+- A → ABC (three variables — too long, fix in BIN)
+- A → B (unit rule — fix in UNIT)
+- A → aB (mixed terminal + variable — fix in TERM)
+- A → ab (two terminals — fix in TERM)
+- A → ε (ε-rule for non-start variable — fix in DEL)
+
+---
+
+TOPIC: Pushdown Automata (PDA) Construction
+
+Q: What is the intuition for building a PDA?
+A: A PDA is an NFA with a stack. Use the stack to count or remember things that finite memory can't handle:
+- Use the stack to match one group against another (push first group, pop while reading second)
+- Use a bottom marker $ (push at the start, accept when you pop $)
+- Use ε-transitions to switch between phases (reading a's vs. reading b's)
+
+---
+
+Q: How do I build a PDA for D = {0^i 1^(i+j) 2^j | i ≥ 0, j > 0}?
+A: Strategy: push x's for each 1, then match against 0's first (cancel i of them), then match remaining j ones against the 2's.
+
+Better approach: Read 0's and push a marker for each. Then read 1's: pop one stack symbol for each 0-paired 1 (matching the i 0's), then push x for each remaining 1. Then read 2's and pop x for each (matching the j 2's). Accept when stack is empty after reading all input.
+
+Key transitions:
+- q0: push $ to mark bottom
+- q1: read 0, push 0 onto stack; loop
+- q2 (ε-transition from q1): start reading 1's, pop 0's for each 1 (matching i pairs)
+- q3 (ε-transition from q2 when stack empty or only $): read remaining 1's, push x for each
+- q4 (ε-transition): read 2's, pop x for each
+- q5: read $, accept (ensuring j > 0 was satisfied)
+
+---
+
+Q: How do I build a PDA for E = {x#y | x, y ∈ {a,b}* and x and y have the same number of a's OR same number of b's}?
+A: This is a union of two languages: L1 = {same count of a's} and L2 = {same count of b's}.
+
+Use two parallel PDA branches (NFA-style nondeterminism via ε from start):
+- Branch 1: Count net a's. Push a for each a in x; pop a (or push b-marker) for each a in y. Accept when balanced.
+- Branch 2: Count net b's similarly.
+
+The PDA nondeterministically chooses which condition to verify.
+
+---
+
+Q: How do I prove a grammar is ambiguous?
+A: Show that some string w has two different leftmost derivations (or equivalently, two different parse trees).
+
+Classic example from HW3: the "dangling else" grammar:
+  <STMT> → <ASSIGN> | <IF> | <IF-ELSE>
+  <IF> → if condition then <STMT>
+  <IF-ELSE> → if condition then <STMT> else <STMT>
+
+The string "if condition then if condition then x=1 else x=1" has two parse trees:
+1. Outer IF-ELSE: else belongs to the outer if
+2. Inner IF-ELSE: else belongs to the inner if
+
+Both are valid leftmost derivations → grammar is ambiguous.

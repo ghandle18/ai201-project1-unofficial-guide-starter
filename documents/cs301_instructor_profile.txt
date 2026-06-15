@@ -1,0 +1,108 @@
+SOURCE: CS 301 Languages & Automata — Final Exam Preparation Guide
+AUTHORITY: verified-TA
+TYPE: exam-prep-Q&A
+
+---
+
+Q: What topics does the Final Exam cover?
+A: The final is cumulative. Topics include all prior material plus the final unit:
+Regular Languages (DFAs, NFAs, regex, pumping lemma) → Context-Free Languages (CFGs, CNF, PDAs, pumping lemma for CFLs) → Turing Machines and Decidability → Undecidability (reductions from A_TM) → Complexity (P, NP, NP-completeness).
+
+The Final Exam Review (Jeopardy format) includes 25 items spanning all topics. A Practice Final Exam tests constructions and proofs at final-exam depth.
+
+---
+
+Q: What are quick-recall definitions from the Final Exam Review?
+A: Key definitions to know cold:
+- Regular languages = the class of languages recognized by DFAs
+- Recognizable languages = the class of languages recognized by Turing machines
+- Language = a finite or infinite set of strings over an alphabet
+- Parse tree = a graphical representation of the derivation of a string from a grammar
+- Reduction = a function mapping instances of one problem to instances of another, preserving membership
+- Class P = languages decidable in polynomial time on a deterministic TM
+- Class NP = languages decidable in polynomial time on a nondeterministic TM (= verifiable in polynomial time deterministically)
+- NP-hard = every NP language is polynomial-time reducible to it
+- NP-complete = in NP AND NP-hard
+
+---
+
+Q: What are the key True/False facts from the final review?
+A: From the Final Exam Review with answers:
+
+TRUE: If A is recognized by a DFA and B is finite, then A ∩ B is regular. (B is finite → B is regular; regular closed under intersection)
+
+FALSE: If A is context-free, then Ā (complement of A) is not context-free. (CFL complement is not always non-CFL. Context-free languages are NOT closed under complement — but this statement is FALSE as a universal claim. Some CFLs have CFL complements.)
+
+FALSE: If A is regular and A ∪ B is regular, then B is regular. (Counterexample: A = Σ*, then A ∪ B = Σ* regardless of B. B can be any language including non-regular ones.)
+
+TRUE: If A is regular and B is finite, then A ∩ B is context-free. (A ∩ B is regular, and all regular languages are context-free → TRUE.)
+
+TRUE: If A is recognizable and B is decidable, then A ∪ B is recognizable. (Recognizable closed under union. Decidable ⊂ recognizable. Union of recognizable languages is recognizable.)
+
+---
+
+Q: How do I determine the output of A_DFA, A_CFG, EQ_REGEX on specific inputs?
+A: From the Final Exam Review:
+
+A_DFA on <M, 010> where M is a specific DFA: Simulate M on "010". If M accepts 010, output ACCEPT. If not, output REJECT. (Answer was REJECT for the given DFA in the review.)
+
+A_CFG on <G, aaba> where G is a grammar: Try to derive "aaba" using G. If derivable, ACCEPT; else REJECT. (Answer was ACCEPT for the given grammar.)
+
+EQ_REGEX on <(0|1)*Σ, Σ*> where Σ = {0,1}: (0|1)*Σ = (0|1)*(0|1) = all strings of length ≥ 1. Σ* = all strings including ε. These are NOT equal (Σ* contains ε, the other doesn't). Output: REJECT.
+
+---
+
+Q: What is the language of the NFA from the Final Review question 11?
+A: The NFA with 4 states where transitions include "0,1" loops on the first and last state, and the path goes through "1" and "0,ε" transitions: L = {w ∈ {0,1}* | w contains the substring 101 or 11}.
+
+---
+
+Q: What is the language of the regular expression (ΣΣ)*Σ0 from the final review?
+A: Strings of even length ending in 0: L = {w ∈ Σ* | |w| is even and w ends with 0}.
+Reasoning: (ΣΣ)* generates even-length strings (0 or more pairs of any symbol). Then Σ0 adds one more pair ending in 0 — but wait, Σ0 is just "any symbol followed by 0", making total length even + 2 = even. So: even-length strings ending in 0.
+
+---
+
+Q: Give an example of constructing a grammar for palindromes.
+A: For L = {w ∈ {0,1}* | w = w^R} (strings equal to their reverse):
+  S → 0S0 | 1S1 | 0 | 1 | ε
+
+Verification: "010" → S → 0S0 → 010 ✓. "1001" → S → 1S1 → 100...wait: → 1(0S0)1 → 1(0ε0)1 = 1001 ✓.
+
+---
+
+TOPIC: Practice Final Exam — Key Problem Types
+
+Q: How do I build a DFA for "w contains an odd number of a's and at most one b"?
+A: Use a cross-product state (count_a mod 2, count_b capped at 2):
+States: (even_a, 0b), (even_a, 1b), (even_a, 2+b), (odd_a, 0b), (odd_a, 1b), (odd_a, 2+b)
+Accepting states: those with odd_a AND (0b or 1b).
+Transitions: reading 'a' flips the a-parity; reading 'b' increments the b-count (capped at 2+).
+Dead state (2+b) is a non-accepting trap.
+
+---
+
+Q: How do I prove PRIMET_TM = {<M> | |L(M)| is prime} is undecidable?
+A: From Practice Final — reduction from A_TM.
+
+Design M' so that L(M') has prime size iff M accepts w:
+- If M accepts w: design M' to accept exactly p strings (for some prime p)
+- If M doesn't accept w: design M' to accept a non-prime number of strings (e.g., 0 or a composite)
+
+Sketch: 
+M' = "On input x:
+1. If x is one of the first p strings in lexicographic order AND M accepts w, accept.
+2. Otherwise, reject."
+
+(Where p is a prime larger than 1. If M accepts, L(M') has p ∈ prime strings → in PRIME_TM. If M doesn't, L(M') = ∅ and 0 is not prime → not in PRIME_TM.)
+
+---
+
+Q: What is the difference between decidable and recognizable?
+A: 
+- Decidable: TM always halts. On every input, it either accepts or rejects (never loops).
+- Recognizable (semi-decidable): TM may loop on some inputs. It accepts all strings in L but may loop forever on strings not in L.
+- Co-recognizable: complement is recognizable.
+- A language is decidable ⟺ it is both recognizable AND co-recognizable.
+
+Examples: A_TM is recognizable but NOT decidable (TM can run M on w and report if it accepts, but may loop if M loops). E_TM is co-recognizable. EQ_TM is neither recognizable nor co-recognizable.

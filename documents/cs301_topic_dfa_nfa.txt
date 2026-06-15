@@ -1,0 +1,74 @@
+SOURCE: CS 301 Languages & Automata — Homework 1: DFAs & NFAs (Study Guide with Solutions)
+AUTHORITY: verified-TA
+TYPE: problem-walkthrough
+
+---
+
+TOPIC: Deterministic Finite Automata (DFA) Construction
+
+Q: How do I design a DFA for a language based on string length (e.g., length not a multiple of 5)?
+A: Track the length mod 5 using 5 states (q0 through q4), where the state represents the current length mod 5. State q0 is the start state. Any state except q0 is an accepting state (since "not a multiple of 5" means length mod 5 ≠ 0). Every symbol transitions to the next state cyclically: q0→q1→q2→q3→q4→q0.
+
+Key insight: When a language depends on the length or count of characters, think in terms of modular arithmetic. The number of states = the modulus.
+
+---
+
+Q: How do I design a DFA for a language where the condition is a running sum (e.g., sum of digits is at most 4)?
+A: Track the running total as the state. States represent sums 0, 1, 2, 3, 4, and "over" (a dead/trap state for sum > 4). Initial state = 0 (empty sum). On reading digit d, transition from state s to state s+d if s+d ≤ 4, otherwise go to the trap state. Accepting states: 0, 1, 2, 3, 4 (all non-trap states).
+
+Key insight: The trap/dead state is a non-accepting state that self-loops on all inputs once reached. Once the sum exceeds 4, no further input can bring it back.
+
+---
+
+Q: How do I design a DFA for a language with two mutually exclusive conditions (e.g., contains "00" or "11" but not both)?
+A: Use a cross-product construction tracking which substrings have appeared. States represent combinations of (has_00, has_11). You need at least 4 states: neither seen, only 00 seen, only 11 seen, both seen. Accepting states are "only 00" and "only 11" — but not "both." Track the last character to detect substrings: additional states for "last char was 0" and "last char was 1" within each mode.
+
+---
+
+TOPIC: Nondeterministic Finite Automata (NFA) Construction
+
+Q: How do I design an NFA for a language where a string starts and ends with different symbols?
+A: NFAs shine for "ends with" conditions. Nondeterministically guess when you're reading the second-to-last character. For "starts and ends with different symbol": read the first character (say it's 1), nondeterministically branch near the end to check the last character is not 1.
+
+Easier approach: Use the NFA to handle the four cases (starts with 1 ends with 2, starts with 1 ends with 3, etc.) as parallel branches from the start state.
+
+---
+
+Q: How do I design an NFA for "bab is a suffix OR at least one of the first three symbols is b"?
+A: Split into two NFA branches via epsilon transitions from the start state:
+- Branch 1 (suffix condition): Use Σ* then b-a-b to reach an accept state.
+- Branch 2 (prefix condition): Accept if position 1, 2, or 3 contains b. Use ε-transitions to "choose" which position to check, then read Σ* to the end.
+
+Key insight: NFAs can nondeterministically "guess" which condition applies. The union of two NFAs is built by adding a new start state with ε-transitions to both original start states.
+
+---
+
+Q: What is the general construction for Kleene star of a language (L*) from a DFA?
+A: Given DFA M = (Q, Σ, δ, q0, F), build NFA N as follows:
+1. Add a new start state q0' that is an accepting state (handles the ε case for L*)
+2. Add ε-transitions from q0' to q0
+3. Add ε-transitions from every accepting state in F back to q0 (to restart reading another copy of L)
+4. Keep all original transitions
+
+WARNING: A common mistake is to just add ε-transitions from F back to q0 and make q0 accepting. This fails when q0 is NOT an accepting state — the machine may incorrectly accept strings by using the ε-loop prematurely. Always add a fresh accepting start state.
+
+---
+
+TOPIC: Closure Properties Proof
+
+Q: Why does swapping accept/reject states NOT work for NFA complement?
+A: For DFAs, swapping states works because every string reaches exactly one state — determinism guarantees the complement. For NFAs, a string can reach multiple states simultaneously. If any of those states is accepting, the NFA accepts. After swapping, a string rejected by the original NFA might still reach some (now-accepting) states, incorrectly accepting it.
+
+Counterexample: NFA N recognizes A = {w ∈ {0,1}* | w starts with 1}. NFA N has start state q0 (non-accepting) and accepting state q1, with transition: on 1, go from q0 to q1; q1 self-loops on 0 and 1. After swapping: q0 becomes accepting, q1 becomes non-accepting. Now the empty string ε is accepted (q0 is the start and now accepting), but ε ∉ complement(A) since ε doesn't start with 1... wait, ε IS in the complement. The issue is string "0": it stays in q0 the whole time, which is now accepting. So N' accepts "0". But 0 ∈ complement(A) is correct! The real problem surfaces for other NFAs — the key is that NFAs can have multiple computation paths, so flipping states doesn't reliably flip the accept/reject outcome.
+
+---
+
+Q: How do you prove the class of regular languages is closed under reverse?
+A: Given DFA M = (Q, Σ, δ, q0, F) recognizing L, construct NFA N = (Q', Σ, δ', q0', F') where:
+- Q' = Q ∪ {q0'} (add a fresh start state)
+- q0' is the new start state
+- F' = {q0} (the original start state becomes the only accept state)
+- δ' reverses all transitions: if δ(r, c) = q in M, then δ'(q, c) includes r in N
+- δ' also adds ε-transitions from q0' to every state in F (original accept states)
+
+Why this works: N accepts w if and only if M accepts w^R. The NFA traces M's computation backward from an accept state to the start state.

@@ -1,0 +1,120 @@
+SOURCE: CS 301 Languages & Automata — Homework 5: Decidability & Undecidability (Study Guide with Solutions)
+AUTHORITY: verified-TA
+TYPE: problem-walkthrough
+
+---
+
+TOPIC: Proving Languages Are Decidable
+
+Q: What is the template for proving a language is decidable?
+A: To prove L is decidable, construct a TM that decides it:
+1. Show a TM S that takes the relevant input and halts on all inputs
+2. Show S accepts when the input is in L
+3. Show S rejects when the input is not in L
+4. Note that S always halts (usually because a subroutine TM T always halts)
+
+You are allowed to use known decidable TMs as subroutines. The key ones from class:
+- A_DFA: decides whether DFA D accepts string w → always halts
+- E_DFA: decides whether L(DFA) = ∅ → always halts
+- EQ_DFA: decides whether two DFAs accept the same language → always halts
+- A_CFG, E_CFG: similar for CFGs
+
+---
+
+Q: How do I prove DIFFERENCE_DFA = {<A, B, w> | A and B are DFAs and w ∈ L(A) − L(B)} is decidable?
+A: Key insight: L(A) − L(B) = L(A) ∩ complement(L(B)). Regular languages are closed under intersection and complement, so we can build a DFA M for this difference.
+
+S = "On input <A, B, w>:
+1. Construct DFA M such that L(M) = L(A) − L(B) using the product construction.
+2. Run A_DFA on input <M, w>.
+3. If A_DFA accepts, accept. If A_DFA rejects, reject."
+
+Correctness:
+- If <A,B,w> ∈ DIFFERENCE_DFA: w ∈ L(A)−L(B) = L(M) → A_DFA accepts → S accepts ✓
+- If <A,B,w> ∉ DIFFERENCE_DFA: w ∉ L(M) → A_DFA rejects → S rejects ✓
+- S always halts because A_DFA always halts ✓
+
+---
+
+Q: How do I prove SUBSET_DFA = {<A, B> | A and B are DFAs and L(A) ⊆ L(B)} is decidable?
+A: Key insight: L(A) ⊆ L(B) if and only if L(A) − L(B) = ∅. So we build DFA M for the difference and check if it's empty.
+
+S = "On input <A, B>:
+1. Construct DFA M such that L(M) = L(A) − L(B).
+2. Run E_DFA on input <M>.
+3. If E_DFA accepts (L(M) = ∅), accept. If E_DFA rejects, reject."
+
+Correctness:
+- If <A,B> ∈ SUBSET_DFA: L(A) ⊆ L(B) → L(M) = ∅ → E_DFA accepts → S accepts ✓
+- If <A,B> ∉ SUBSET_DFA: L(A) ⊄ L(B) → L(M) ≠ ∅ → E_DFA rejects → S rejects ✓
+
+---
+
+TOPIC: Proving Languages Are Undecidable (Reduction from A_TM)
+
+Q: What is the template for an undecidability proof by reduction?
+A: To prove L is undecidable via reduction from A_TM:
+1. Assume for contradiction that L is decidable and R decides it.
+2. Use R to construct a TM S that decides A_TM.
+3. The key step: define M' — a "helper" TM that is tailored so that R's answer about M' reveals whether M accepts w.
+4. Show: if <M,w> ∈ A_TM then <M'> ∈ L (so R accepts, S accepts) ✓
+5. Show: if <M,w> ∉ A_TM then <M'> ∉ L (so R rejects, S rejects) ✓
+6. Conclude: S decides A_TM — contradiction since A_TM is undecidable.
+
+---
+
+Q: How do I prove Aε_TM = {<M> | M is a TM that accepts ε} is undecidable?
+A: Design M' so that M' accepts ε if and only if M accepts w.
+
+M' = "On input x:
+1. If x ≠ ε, reject.
+2. If x = ε, run M on input w.
+3. If M accepts w, accept. If M does not accept w, reject."
+
+Now:
+- If M accepts w: L(M') = {ε} → M' accepts ε → <M'> ∈ Aε_TM → R accepts → S accepts ✓
+- If M does not accept w: L(M') = ∅ → M' does not accept ε → <M'> ∉ Aε_TM → R rejects → S rejects ✓
+
+Since S would decide A_TM — contradiction. Aε_TM is undecidable. □
+
+---
+
+Q: How do I prove EVEN-STRINGS_TM = {<M> | M accepts an even number of strings} is undecidable?
+A: Design M' so that M' accepts 0 strings (even) if M accepts w, or M' accepts 1 string (odd) if M doesn't accept w. (Note the FLIP — accept when M doesn't, reject when M does.)
+
+M' = "On input x:
+1. If x ≠ w, reject.
+2. If x = w, run M on input w.
+3. If M accepts w, reject. If M does not accept w, accept."
+
+Now:
+- If M accepts w: L(M') = ∅, |L(M')| = 0 (even) → <M'> ∈ EVEN-STRINGS_TM → R accepts → S accepts ✓
+- If M does not accept w: L(M') = {w}, |L(M')| = 1 (odd) → <M'> ∉ EVEN-STRINGS_TM → R rejects → S rejects ✓
+
+Aε_TM is undecidable. □
+
+---
+
+Q: How do I prove EVEN-LENGTH_TM = {<M> | M accepts at least one string of even length} is undecidable?
+A: Design M' so that M' accepts all even-length strings if M accepts w, or accepts nothing if M doesn't.
+
+M' = "On input x:
+1. If |x| is odd, reject.
+2. If |x| is even, run M on input w.
+3. If M accepts w, accept. If M does not accept w, reject."
+
+Now:
+- If M accepts w: L(M') = (ΣΣ)* (all even-length strings) → M' accepts at least one even-length string → <M'> ∈ EVEN-LENGTH_TM → R accepts → S accepts ✓
+- If M does not accept w: L(M') = ∅ → M' accepts no even-length strings → <M'> ∉ EVEN-LENGTH_TM → R rejects → S rejects ✓
+
+Contradiction → EVEN-LENGTH_TM is undecidable. □
+
+---
+
+Q: What is the key pattern in all three undecidability proofs above?
+A: All three use the same "wrapper M'" technique:
+1. M' inspects its input first (to make L(M') a specific set)
+2. Then M' runs M on w (the original TM/string pair)
+3. M' accepts or rejects based on what M does
+
+The trick is designing L(M') so that whether it's in L perfectly tracks whether M accepts w. Depending on whether L is a "positive" property (being IN L is good) or needs to be toggled, you may need to FLIP the accept/reject in step 3 (as in EVEN-STRINGS_TM above).

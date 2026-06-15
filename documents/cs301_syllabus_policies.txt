@@ -1,0 +1,94 @@
+SOURCE: CS 301 Languages & Automata — Syllabus Policies FAQ
+AUTHORITY: official
+TYPE: Q&A
+
+---
+
+Q: What is the late submission policy for homework assignments?
+A: Late homework submissions are accepted on a sliding penalty scale:
+- 0–12 hours late: 5-point penalty
+- 12–24 hours late: 10-point penalty
+- More than 24 hours late: NOT accepted (0 points)
+There are no exceptions unless the instructor announces an extension on Piazza.
+
+---
+
+Q: How is the final grade calculated?
+A: The final grade is composed of:
+- iClicker Participation: 5% (every lecture, graded on completion not correctness)
+- Quizzes: 10% (10 quizzes counted, three lowest dropped)
+- Lab Assignments: 10% (10 labs counted, three lowest dropped)
+- Homework Assignments: 20% (5 homework counted, one lowest dropped)
+- Midterm Exams: 35% (2 exams, each worth 17.5%)
+- Final Exam: 20%
+- Extra Credit: up to 1% (optional assignments)
+
+---
+
+Q: What are the letter grade cutoffs?
+A: A: 90–100, B: 80–89, C: 70–79, D: 60–69, F: below 60.
+
+---
+
+Q: Where do I submit homework?
+A: All homework assignments must be submitted on Gradescope. You will be automatically added to Gradescope before the first homework. Submission instructions are included in each assignment.
+
+---
+
+Q: Can I submit handwritten work?
+A: No. All written answers must be typed and submitted as a PDF. Handwritten answers are not accepted. A 5-point penalty applies to submissions not following formatting guidelines (answers not labeled, wrong file format, etc.).
+
+---
+
+Q: What file format do I need for JFLAP problems?
+A: JFLAP problems (DFAs, NFAs, regular expressions, CFGs, PDAs, Turing machines) must be submitted as JFLAP version 7.1 files with the .jff extension. Each file must be named correctly (e.g., 1a.jff, 2b.jff). Test your machines in JFLAP before submitting.
+
+---
+
+Q: What is the exam policy if I miss an exam?
+A: There are no make-up exams. If you have a documented, legitimate conflict, you may be offered an alternate exam, but you must notify the course staff in advance via a private Piazza post. Emergency situations on exam day require notification as soon as possible plus documentation.
+
+---
+
+Q: How do I request a regrade?
+A: Regrade requests must be submitted on Gradescope within one week after grades are posted. Before submitting, you must: (1) review the sample solution on Blackboard, (2) review the grading rubric on Gradescope, and (3) write a clear, specific explanation of why you deserve more points. Requests not following these steps will be dismissed without review.
+
+---
+
+Q: What is the academic integrity policy?
+A: All assignments, quizzes, and exams are individual. Using any unauthorized assistance — including generative AI tools, searching for solutions online, getting help from other students or tutors — is a violation of UIC academic integrity policy. Violations result in a grade of zero for the assignment and disciplinary action.
+
+---
+
+Q: Can I use generative AI tools on homework?
+A: No. The assignment instructions explicitly prohibit "using generative AI or searching for solutions online." This applies to all homework, quizzes, and exams. Using AI-generated solutions is treated the same as cheating.
+
+---
+
+Q: How many lectures can I miss without penalty?
+A: You may miss up to 5 lectures without penalty. This drop policy covers illness, sports, personal emergencies, etc. and is applied automatically at the end of the semester. Beyond 5, iClicker participation points are lost.
+
+---
+
+Q: Where are office hours held?
+A: All office hours — both instructor and TA — are held in CDRLC 2402 (the CS building). A table is labeled and reserved for CS 301. Students may also use this space Mon–Fri 8am–7pm to work on the course outside of office hours.
+
+---
+
+Q: What communication platform does the course use?
+A: All course communication happens on Piazza. Do not email the teaching staff directly. Post publicly when possible so other students benefit. You may post anonymously to other students (staff can still see your name). Never post answers to assignment questions on Piazza — offer hints or ask for clarification only.
+
+---
+
+Q: How does iClicker work?
+A: Participation is tracked via iClicker at every lecture. You sign in using your computer or the iClicker Student app. Answers are graded on completion — not correctness. iClicker is free to use. Section A uses join code DJTW, Section B uses DUOV.
+
+---
+
+Q: What is the recommended textbook?
+A: "Introduction to the Theory of Computation" (2nd or 3rd Edition) by Michael Sipser. The textbook is recommended, not required.
+
+---
+
+Q: What are the prerequisites for CS 301?
+A: CS 151 (Mathematical Foundations of Computing) OR CS 201 (Data Structures and Discrete Mathematics I) with a grade of C or better, AND CS 251 (Data Structures).
