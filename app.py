@@ -1,4 +1,7 @@
 """
+Milestone 5 - Gradio Web UI
+Built with Claude and refined by me. Provides a user-friendly interface to ask questions and get TA-verified answers about CS 301 course policies, content, and exam prep. Displays confidence levels and sources to help students gauge reliability.
+Due to time constraints, this UI focuses on core functionality and clarity, with a simple layout and essential features. Future iterations could add more interactivity, styling, and user feedback mechanisms.
 app.py — Gradio web UI for the CS 301 Unofficial Course Assistant.
 
 Run:  python app.py
