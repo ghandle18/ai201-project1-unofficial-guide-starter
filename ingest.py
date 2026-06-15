@@ -1,4 +1,5 @@
 """
+Milestone 3: Chunking Strategy Implementation
 ingest.py — Document loading and type-aware chunking pipeline.
 
 Three document types, three strategies:
