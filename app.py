@@ -37,9 +37,9 @@ def handle_query(question: str):
 
 with gr.Blocks(title="CS 301 Unofficial Guide", theme=gr.themes.Soft()) as demo:
     gr.Markdown("""
-    # 📚 CS 301: Languages & Automata — Unofficial Course Assistant
+    # 📚 CS 301: Languages & Automata - Unofficial Course Assistant
     ### TA-verified answers about course policies, content, and exam prep at UIC.
-    *Answers are grounded in TA-curated documents — not general AI knowledge.*
+    *Answers are grounded in TA-curated documents, not general AI knowledge.*
     *When the system isn't sure, it tells you and points you to course staff.*
     """)
 
@@ -59,7 +59,7 @@ with gr.Blocks(title="CS 301 Unofficial Guide", theme=gr.themes.Soft()) as demo:
             confidence_output = gr.Textbox(label="Confidence", lines=3)
             sources_output = gr.Textbox(label="Sources Used", lines=6)
 
-    with gr.Accordion("Retrieved Chunks — debug view", open=False):
+    with gr.Accordion("Retrieved Chunks: debug view", open=False):
         chunks_output = gr.Textbox(label="Top Retrieved Chunks (with distances)", lines=20)
 
     gr.Examples(
